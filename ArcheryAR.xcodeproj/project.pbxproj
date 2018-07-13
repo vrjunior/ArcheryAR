@@ -13,9 +13,13 @@
 		D253442020F9042B00F73CB1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D253441E20F9042B00F73CB1 /* Main.storyboard */; };
 		D253442220F9042D00F73CB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D253442120F9042D00F73CB1 /* Assets.xcassets */; };
 		D253442520F9042D00F73CB1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D253442320F9042D00F73CB1 /* LaunchScreen.storyboard */; };
+		D58C71859C1DEE6463AC137F /* Pods_ArcheryAR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97EEDAD9DDF79C3EB0BC0650 /* Pods_ArcheryAR.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2FDE1BAAF0BB399C2C6A6E45 /* Pods-ArcheryAR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcheryAR.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArcheryAR/Pods-ArcheryAR.release.xcconfig"; sourceTree = "<group>"; };
+		52AC49665DF5B9072727F925 /* Pods-ArcheryAR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcheryAR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ArcheryAR/Pods-ArcheryAR.debug.xcconfig"; sourceTree = "<group>"; };
+		97EEDAD9DDF79C3EB0BC0650 /* Pods_ArcheryAR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArcheryAR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D253441520F9042B00F73CB1 /* ArcheryAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArcheryAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D253441820F9042B00F73CB1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D253441A20F9042B00F73CB1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -31,17 +35,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D58C71859C1DEE6463AC137F /* Pods_ArcheryAR.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E5751304E5CE8A9549F633C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				52AC49665DF5B9072727F925 /* Pods-ArcheryAR.debug.xcconfig */,
+				2FDE1BAAF0BB399C2C6A6E45 /* Pods-ArcheryAR.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		D253440C20F9042B00F73CB1 = {
 			isa = PBXGroup;
 			children = (
 				D253441720F9042B00F73CB1 /* ArcheryAR */,
 				D253441620F9042B00F73CB1 /* Products */,
+				6E5751304E5CE8A9549F633C /* Pods */,
+				F336E445048B53EB08B67F3F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +83,14 @@
 			path = ArcheryAR;
 			sourceTree = "<group>";
 		};
+		F336E445048B53EB08B67F3F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				97EEDAD9DDF79C3EB0BC0650 /* Pods_ArcheryAR.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,6 +98,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D253442920F9042D00F73CB1 /* Build configuration list for PBXNativeTarget "ArcheryAR" */;
 			buildPhases = (
+				2474655FEEFB367245239273 /* [CP] Check Pods Manifest.lock */,
 				D253441120F9042B00F73CB1 /* Sources */,
 				D253441220F9042B00F73CB1 /* Frameworks */,
 				D253441320F9042B00F73CB1 /* Resources */,
@@ -133,6 +158,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2474655FEEFB367245239273 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ArcheryAR-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D253441120F9042B00F73CB1 /* Sources */ = {
@@ -282,15 +328,13 @@
 		};
 		D253442A20F9042D00F73CB1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 52AC49665DF5B9072727F925 /* Pods-ArcheryAR.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5W8YC8Y5Q7;
 				INFOPLIST_FILE = ArcheryAR/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vrmassoni.ArcheryAR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -300,15 +344,13 @@
 		};
 		D253442B20F9042D00F73CB1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2FDE1BAAF0BB399C2C6A6E45 /* Pods-ArcheryAR.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5W8YC8Y5Q7;
 				INFOPLIST_FILE = ArcheryAR/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vrmassoni.ArcheryAR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
