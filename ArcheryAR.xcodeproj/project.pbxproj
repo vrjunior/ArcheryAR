@@ -8,11 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		D253441920F9042B00F73CB1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D253441820F9042B00F73CB1 /* AppDelegate.swift */; };
-		D253441B20F9042B00F73CB1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D253441A20F9042B00F73CB1 /* art.scnassets */; };
 		D253441D20F9042B00F73CB1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D253441C20F9042B00F73CB1 /* ViewController.swift */; };
 		D253442020F9042B00F73CB1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D253441E20F9042B00F73CB1 /* Main.storyboard */; };
 		D253442220F9042D00F73CB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D253442120F9042D00F73CB1 /* Assets.xcassets */; };
 		D253442520F9042D00F73CB1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D253442320F9042D00F73CB1 /* LaunchScreen.storyboard */; };
+		D29A220020FD110800FB0378 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29A21FF20FD110800FB0378 /* UIColor.swift */; };
+		D29A220420FD1BB400FB0378 /* GameStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29A220320FD1BB400FB0378 /* GameStatus.swift */; };
+		D29A220920FD24EE00FB0378 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D29A220820FD24EE00FB0378 /* art.scnassets */; };
 		D58C71859C1DEE6463AC137F /* Pods_ArcheryAR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97EEDAD9DDF79C3EB0BC0650 /* Pods_ArcheryAR.framework */; };
 /* End PBXBuildFile section */
 
@@ -22,12 +24,14 @@
 		97EEDAD9DDF79C3EB0BC0650 /* Pods_ArcheryAR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArcheryAR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D253441520F9042B00F73CB1 /* ArcheryAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArcheryAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D253441820F9042B00F73CB1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D253441A20F9042B00F73CB1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		D253441C20F9042B00F73CB1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D253441F20F9042B00F73CB1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D253442120F9042D00F73CB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D253442420F9042D00F73CB1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D253442620F9042D00F73CB1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D29A21FF20FD110800FB0378 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		D29A220320FD1BB400FB0378 /* GameStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStatus.swift; sourceTree = "<group>"; };
+		D29A220820FD24EE00FB0378 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,15 +76,57 @@
 		D253441720F9042B00F73CB1 /* ArcheryAR */ = {
 			isa = PBXGroup;
 			children = (
-				D253441820F9042B00F73CB1 /* AppDelegate.swift */,
-				D253441A20F9042B00F73CB1 /* art.scnassets */,
-				D253441C20F9042B00F73CB1 /* ViewController.swift */,
-				D253441E20F9042B00F73CB1 /* Main.storyboard */,
-				D253442120F9042D00F73CB1 /* Assets.xcassets */,
-				D253442320F9042D00F73CB1 /* LaunchScreen.storyboard */,
-				D253442620F9042D00F73CB1 /* Info.plist */,
+				D29A220820FD24EE00FB0378 /* art.scnassets */,
+				D29A220520FD24A500FB0378 /* Models.scnassets */,
+				D29A21FE20FD10F800FB0378 /* Helpers */,
+				D29A21FD20FD10CE00FB0378 /* Controller */,
+				D29A21FC20FD10B700FB0378 /* View */,
+				D29A21FB20FD10A200FB0378 /* Support Files */,
 			);
 			path = ArcheryAR;
+			sourceTree = "<group>";
+		};
+		D29A21FB20FD10A200FB0378 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				D253442620F9042D00F73CB1 /* Info.plist */,
+				D253442120F9042D00F73CB1 /* Assets.xcassets */,
+				D253441820F9042B00F73CB1 /* AppDelegate.swift */,
+			);
+			name = "Support Files";
+			sourceTree = "<group>";
+		};
+		D29A21FC20FD10B700FB0378 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D253442320F9042D00F73CB1 /* LaunchScreen.storyboard */,
+				D253441E20F9042B00F73CB1 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D29A21FD20FD10CE00FB0378 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D253441C20F9042B00F73CB1 /* ViewController.swift */,
+				D29A220320FD1BB400FB0378 /* GameStatus.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		D29A21FE20FD10F800FB0378 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				D29A21FF20FD110800FB0378 /* UIColor.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		D29A220520FD24A500FB0378 /* Models.scnassets */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models.scnassets;
 			sourceTree = "<group>";
 		};
 		F336E445048B53EB08B67F3F /* Frameworks */ = {
@@ -102,6 +148,7 @@
 				D253441120F9042B00F73CB1 /* Sources */,
 				D253441220F9042B00F73CB1 /* Frameworks */,
 				D253441320F9042B00F73CB1 /* Resources */,
+				D29A21FA20FD063500FB0378 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -150,9 +197,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D253441B20F9042B00F73CB1 /* art.scnassets in Resources */,
 				D253442520F9042D00F73CB1 /* LaunchScreen.storyboard in Resources */,
 				D253442220F9042D00F73CB1 /* Assets.xcassets in Resources */,
+				D29A220920FD24EE00FB0378 /* art.scnassets in Resources */,
 				D253442020F9042B00F73CB1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -178,6 +225,19 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D29A21FA20FD063500FB0378 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"  ";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -186,6 +246,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D253441D20F9042B00F73CB1 /* ViewController.swift in Sources */,
+				D29A220420FD1BB400FB0378 /* GameStatus.swift in Sources */,
+				D29A220020FD110800FB0378 /* UIColor.swift in Sources */,
 				D253441920F9042B00F73CB1 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -334,7 +396,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5W8YC8Y5Q7;
 				INFOPLIST_FILE = ArcheryAR/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.vrmassoni.ArcheryAR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -350,7 +415,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5W8YC8Y5Q7;
 				INFOPLIST_FILE = ArcheryAR/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.vrmassoni.ArcheryAR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
