@@ -55,6 +55,13 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D201CD0720FE6EA2001EF92D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		D253440C20F9042B00F73CB1 = {
 			isa = PBXGroup;
 			children = (
@@ -76,8 +83,8 @@
 		D253441720F9042B00F73CB1 /* ArcheryAR */ = {
 			isa = PBXGroup;
 			children = (
+				D201CD0720FE6EA2001EF92D /* Model */,
 				D29A220820FD24EE00FB0378 /* art.scnassets */,
-				D29A220520FD24A500FB0378 /* Models.scnassets */,
 				D29A21FE20FD10F800FB0378 /* Helpers */,
 				D29A21FD20FD10CE00FB0378 /* Controller */,
 				D29A21FC20FD10B700FB0378 /* View */,
@@ -120,13 +127,6 @@
 				D29A21FF20FD110800FB0378 /* UIColor.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		D29A220520FD24A500FB0378 /* Models.scnassets */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Models.scnassets;
 			sourceTree = "<group>";
 		};
 		F336E445048B53EB08B67F3F /* Frameworks */ = {

@@ -71,7 +71,9 @@ class ViewController: UIViewController {
     fileprivate func setupARDetection() {
         if ARConfiguration.isSupported {
             //starts plane detection
-            self.sessionConfig.planeDetection = [.vertical, .horizontal]
+            self.sessionConfig.planeDetection = [.horizontal] // .vertical
+            
+            self.sessionConfig.worldAlignment = .gravityAndHeading
             
             self.session.delegate = self
             self.session.run(sessionConfig)
@@ -93,7 +95,7 @@ class ViewController: UIViewController {
     
     @objc func addTargetToPlane(withGestureRecognizer recognizer: UIGestureRecognizer) {
         let tapLocation = recognizer.location(in: sceneView)
-        let hitTestResults = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
+        let hitTestResults = sceneView.hitTest(tapLocation, types: .estimatedHorizontalPlane)
         
         guard let hitTestResult = hitTestResults.first else { return }
         let translation = hitTestResult.worldTransform.columns.3
@@ -101,11 +103,17 @@ class ViewController: UIViewController {
         let y = translation.y
         let z = translation.z
         
+        
         guard let targetScene = SCNScene(named: "art.scnassets/target.scn"),
             let targetNode = targetScene.rootNode.childNode(withName: "target", recursively: false)
             else { return }
         
-        
+        // Fix the angle based on camera angle
+        // Guarantee that the target always be position on the front of you
+        if let cameraAngle = self.session.currentFrame?.camera.eulerAngles {
+            targetNode.eulerAngles.y = SCNVector3(cameraAngle).y - .pi / 2
+        }
+
         targetNode.position = SCNVector3(x, y, z)
         sceneView.scene.rootNode.addChildNode(targetNode)
     }
