@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  GameViewController.swift
 //  ArcheryAR
 //
 //  Created by Valmir Junior on 13/07/18.
@@ -10,23 +10,43 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController {
+class GameViewController: UIViewController {
 
+    // MARK: Outlets
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var buttonAddTarget: UIButton!
     @IBOutlet weak var buttonGetBow: UIButton!
     @IBOutlet weak var noticeView: UIView!
     @IBOutlet weak var noticeMessage: UILabel!
     
-    // MARK: - ARKit / ARSCNView
-    let session = ARSession()
-    var sessionConfig = ARWorldTrackingConfiguration()
+    // MARK: Private variables and constants
+    private let session = ARSession()
+    private var sessionConfig = ARWorldTrackingConfiguration()
     
     private var panGesture: UIPanGestureRecognizer!
     private var tapGesture: UITapGestureRecognizer!
     
     private var isPlainDetected: Bool = false
     private var timer = Timer()
+    
+    private var targetsInScene: [Target] = [] {
+        // Control the quantity of targets in Scene
+        didSet {
+            if self.targetsInScene.count > 10 {
+                self.targetsInScene.first?.node.removeFromParentNode()
+                self.targetsInScene.removeFirst()
+            }
+        }
+    }
+    private var arrowsInScene: [Arrow] = [] {
+        // Control the arrows of targets in Scene
+        didSet {
+            if self.arrowsInScene.count > 10 {
+                self.arrowsInScene.first?.node.removeFromParentNode()
+                self.arrowsInScene.removeFirst()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +55,6 @@ class ViewController: UIViewController {
         self.setupARDetection()
         self.setupDebugger()
         self.setupGestures()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,18 +83,19 @@ class ViewController: UIViewController {
     fileprivate func setupGestures() {
         self.tapGesture = UITapGestureRecognizer(
             target: self,
-            action: #selector(ViewController.addTargetToPlane(withGestureRecognizer:))
+            action: #selector(GameViewController.addTargetToPlane(withGestureRecognizer:))
         )
         
         self.panGesture = UIPanGestureRecognizer(
             target: self,
-            action: #selector(ViewController.throwArrow(withGestureRecognizer:))
+            action: #selector(GameViewController.throwArrow(withGestureRecognizer:))
         )
     }
     
     fileprivate func setupScene() {
         // set up sceneView
         sceneView.delegate = self
+        sceneView.scene.physicsWorld.contactDelegate = self
         sceneView.session = session
         sceneView.antialiasingMode = .multisampling4X
         sceneView.autoenablesDefaultLighting = true
@@ -103,7 +123,6 @@ class ViewController: UIViewController {
             
             self.sessionConfig.worldAlignment = .gravity
             
-            self.session.delegate = self
             self.session.run(sessionConfig)
             
         } else {
@@ -118,40 +137,43 @@ class ViewController: UIViewController {
     
     @objc func throwArrow(withGestureRecognizer recognizer: UIPanGestureRecognizer) {
         
+        // Check if gesture ended
         guard recognizer.state == .ended else {
             return
         }
         
+        // Retrieve velocity in relation to view
         let velocity = recognizer.velocity(in: self.sceneView)
-        print("x: \(velocity.x); y: \(velocity.y)")
         
+        // If velocity in Y axis is 0 then return
         if velocity.y >= 0 {
             return
         }
         
-        guard let arrowScene = SCNScene(named: "art.scnassets/arrow.scn"),
-            let arrowNode = arrowScene.rootNode.childNode(withName: "arrow", recursively: false) else {
-            return
-        }
+        // Create an instance of arrow
+        let arrow = Arrow()
 
+        // Guarantee that exists a camera in current frame of arkit session
         guard let camera = self.session.currentFrame?.camera else {
             return
         }
-
         
-        
+        // Get position and angle of camera
         let position = camera.transform.columns.3
         let cameraAngle = SCNVector3(camera.eulerAngles)
         
-        arrowNode.position = SCNVector3(position.x, position.y, position.z - 0.5)
+        // sets arrow posision according to camera posision
+        arrow.node.position = SCNVector3(position.x, position.y, position.z - 0.5)
         
         // set angles to node with it's corrections in angles (because the model axis)
-        arrowNode.eulerAngles.y = cameraAngle.y
-        arrowNode.eulerAngles.x = cameraAngle.x - .pi
-        arrowNode.eulerAngles.z = cameraAngle.z + .pi / 2
+        arrow.node.eulerAngles.y = cameraAngle.y
+        arrow.node.eulerAngles.x = cameraAngle.x - .pi
+        arrow.node.eulerAngles.z = cameraAngle.z + .pi / 2
         
-        self.sceneView.scene.rootNode.addChildNode(arrowNode)
+        self.sceneView.scene.rootNode.addChildNode(arrow.node)
+        self.arrowsInScene.append(arrow)
         
+        // fowardForce according to velocity of pan gesture
         let fowardForce = (Float(velocity.y) / 100)
         
         // calculate the force
@@ -159,7 +181,7 @@ class ViewController: UIViewController {
         let rotatedForce = simd_mul(camera.transform, force)
         let vectorForce = SCNVector3(rotatedForce.x, rotatedForce.y, rotatedForce.z)
         
-        arrowNode.physicsBody?.applyForce(vectorForce, asImpulse: true)
+        arrow.node.physicsBody?.applyForce(vectorForce, asImpulse: true)
     }
     
     @objc func addTargetToPlane(withGestureRecognizer recognizer: UIGestureRecognizer) {
@@ -173,18 +195,18 @@ class ViewController: UIViewController {
         let z = translation.z
         
         
-        guard let targetScene = SCNScene(named: "art.scnassets/target.scn"),
-            let targetNode = targetScene.rootNode.childNode(withName: "target", recursively: false)
-            else { return }
+        let target = Target()
         
         // Fix the angle based on camera angle
         // Guarantee that the target always be position on the front of you
         if let cameraAngle = self.session.currentFrame?.camera.eulerAngles {
-            targetNode.eulerAngles.y = SCNVector3(cameraAngle).y - .pi / 2
+            target.node.eulerAngles.y = SCNVector3(cameraAngle).y - .pi / 2
         }
 
-        targetNode.position = SCNVector3(x, y, z)
-        sceneView.scene.rootNode.addChildNode(targetNode)
+        target.node.position = SCNVector3(x, y, z)
+        sceneView.scene.rootNode.addChildNode(target.node)
+        
+        self.targetsInScene.append(target)
     }
     
     @IBAction func performChangeControls(_ sender: UIButton) {
@@ -211,26 +233,15 @@ class ViewController: UIViewController {
         
         self.noticeView.isHidden = false
         
-        self.timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: false, block: { (timer) in
+        self.timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: false, block: { _ in
             self.noticeView.isHidden = true
         })
     }
     
 }
 
-extension ViewController: ARSCNViewDelegate {
-    
-    // MARK: - ARSCNViewDelegate
-    
-    /*
-     // Override to create and configure nodes for anchors added to the view's session.
-     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-     let node = SCNNode()
-     
-     return node
-     }
-     */
-    
+extension GameViewController: ARSCNViewDelegate {
+        
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         
         // 1
@@ -242,7 +253,7 @@ extension ViewController: ARSCNViewDelegate {
         let plane = SCNPlane(width: width, height: height)
         
         // 3
-        plane.materials.first?.diffuse.contents = UIColor.grayTransparent
+        plane.materials.first?.diffuse.contents = UIColor.clear
         
         // 4
         let planeNode = SCNNode(geometry: plane)
@@ -253,6 +264,13 @@ extension ViewController: ARSCNViewDelegate {
         let z = CGFloat(planeAnchor.center.z)
         planeNode.position = SCNVector3(x, y, z)
         planeNode.eulerAngles.x = -.pi / 2
+        
+        // setup physics
+        planeNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+        planeNode.physicsBody?.categoryBitMask = CategoryMaskType.floor.rawValue
+        planeNode.physicsBody?.collisionBitMask = 3
+        planeNode.physicsBody?.contactTestBitMask = 3
+        
         
         // 6
         node.addChildNode(planeNode)
@@ -275,60 +293,77 @@ extension ViewController: ARSCNViewDelegate {
             let plane = planeNode.geometry as? SCNPlane
             else { return }
         
-        // 2
         let width = CGFloat(planeAnchor.extent.x)
         let height = CGFloat(planeAnchor.extent.z)
         plane.width = width
         plane.height = height
         
-        // 3
         let x = CGFloat(planeAnchor.center.x)
         let y = CGFloat(planeAnchor.center.y)
         let z = CGFloat(planeAnchor.center.z)
         planeNode.position = SCNVector3(x, y, z)
     }
     
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
+}
+
+extension GameViewController: SCNPhysicsContactDelegate {
+    
+    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
+        
+        
+        // If nodeA is arrow node
+        if contact.nodeA.physicsBody?.categoryBitMask == CategoryMaskType.arrow.rawValue {
+            
+            let arrow = contact.nodeA
+            
+            self.handleArrowContact(arrowNode: arrow, anotherNode: contact.nodeB)
+            
+            return
+        }
+        
+        // If nodeB is arrow Node
+        if contact.nodeB.physicsBody?.categoryBitMask == CategoryMaskType.arrow.rawValue {
+            
+            let arrow = contact.nodeB
+            
+            self.handleArrowContact(arrowNode: arrow, anotherNode: contact.nodeA)
+            
+            return
+        }
         
     }
     
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
+    // Handle arrow contact
+    func handleArrowContact(arrowNode: SCNNode, anotherNode: SCNNode) {
         
+        if anotherNode.categoryBitMask == CategoryMaskType.floor.rawValue {
+            
+            self.removeArrowFromScene(arrowNode: arrowNode)
+            
+            return
+        }
+        
+        if anotherNode.name == "target" {
+            
+            arrowNode.physicsBody?.type = .kinematic
+            
+            return
+        }
     }
     
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
+    func removeArrowFromScene(arrowNode: SCNNode) {
         
+        // remove from scene
+        arrowNode.removeFromParentNode()
+        
+        // remove from array of control
+        let arrowsNodeInScene = self.arrowsInScene.map { $0.node }
+        
+        for (index, arrowNodeToCompare) in arrowsNodeInScene.enumerated()
+                                        where arrowNode == arrowNodeToCompare {
+            
+                self.arrowsInScene.remove(at: index)
+        }
     }
     
 }
-
-extension ViewController: ARSessionDelegate {
-    
-    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-        
-    }
-    
-}
-
-//extension ViewController: SCNPhysicsContactDelegate {
-//    
-//    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-//        
-//        if contact.nodeA ==   {
-//            
-//            
-//            
-//        }
-//        
-//        if let arrow = contact.nodeB {
-//            
-//            
-//        }
-//        
-//        
-//    }
-//    
-//}
