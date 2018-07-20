@@ -13,10 +13,20 @@ import ARKit
 class ViewController: UIViewController {
 
     @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet weak var buttonAddTarget: UIButton!
+    @IBOutlet weak var buttonGetBow: UIButton!
+    @IBOutlet weak var noticeView: UIView!
+    @IBOutlet weak var noticeMessage: UILabel!
     
     // MARK: - ARKit / ARSCNView
     let session = ARSession()
     var sessionConfig = ARWorldTrackingConfiguration()
+    
+    private var panGesture: UIPanGestureRecognizer!
+    private var tapGesture: UITapGestureRecognizer!
+    
+    private var isPlainDetected: Bool = false
+    private var timer = Timer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +34,7 @@ class ViewController: UIViewController {
         self.setupScene()
         self.setupARDetection()
         self.setupDebugger()
-        self.addTapGestureToSceneView()
+        self.setupGestures()
         
     }
     
@@ -41,8 +51,26 @@ class ViewController: UIViewController {
         sceneView.session.pause()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.showNotice(message: "Move around your phone to detect the floor", seconds: 4)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    fileprivate func setupGestures() {
+        self.tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(ViewController.addTargetToPlane(withGestureRecognizer:))
+        )
+        
+        self.panGesture = UIPanGestureRecognizer(
+            target: self,
+            action: #selector(ViewController.throwArrow(withGestureRecognizer:))
+        )
     }
     
     fileprivate func setupScene() {
@@ -73,7 +101,7 @@ class ViewController: UIViewController {
             //starts plane detection
             self.sessionConfig.planeDetection = [.horizontal] // .vertical
             
-            self.sessionConfig.worldAlignment = .gravityAndHeading
+            self.sessionConfig.worldAlignment = .gravity
             
             self.session.delegate = self
             self.session.run(sessionConfig)
@@ -87,10 +115,51 @@ class ViewController: UIViewController {
         self.sceneView.debugOptions = ARSCNDebugOptions.showFeaturePoints
     }
     
-    fileprivate func addTapGestureToSceneView() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self,
-            action: #selector(ViewController.addTargetToPlane(withGestureRecognizer:)))
-        sceneView.addGestureRecognizer(tapGestureRecognizer)
+    
+    @objc func throwArrow(withGestureRecognizer recognizer: UIPanGestureRecognizer) {
+        
+        guard recognizer.state == .ended else {
+            return
+        }
+        
+        let velocity = recognizer.velocity(in: self.sceneView)
+        print("x: \(velocity.x); y: \(velocity.y)")
+        
+        if velocity.y >= 0 {
+            return
+        }
+        
+        guard let arrowScene = SCNScene(named: "art.scnassets/arrow.scn"),
+            let arrowNode = arrowScene.rootNode.childNode(withName: "arrow", recursively: false) else {
+            return
+        }
+
+        guard let camera = self.session.currentFrame?.camera else {
+            return
+        }
+
+        
+        
+        let position = camera.transform.columns.3
+        let cameraAngle = SCNVector3(camera.eulerAngles)
+        
+        arrowNode.position = SCNVector3(position.x, position.y, position.z - 0.5)
+        
+        // set angles to node with it's corrections in angles (because the model axis)
+        arrowNode.eulerAngles.y = cameraAngle.y
+        arrowNode.eulerAngles.x = cameraAngle.x - .pi
+        arrowNode.eulerAngles.z = cameraAngle.z + .pi / 2
+        
+        self.sceneView.scene.rootNode.addChildNode(arrowNode)
+        
+        let fowardForce = (Float(velocity.y) / 100)
+        
+        // calculate the force
+        let force = simd_make_float4(0, 0, fowardForce, 0)
+        let rotatedForce = simd_mul(camera.transform, force)
+        let vectorForce = SCNVector3(rotatedForce.x, rotatedForce.y, rotatedForce.z)
+        
+        arrowNode.physicsBody?.applyForce(vectorForce, asImpulse: true)
     }
     
     @objc func addTargetToPlane(withGestureRecognizer recognizer: UIGestureRecognizer) {
@@ -118,6 +187,34 @@ class ViewController: UIViewController {
         sceneView.scene.rootNode.addChildNode(targetNode)
     }
     
+    @IBAction func performChangeControls(_ sender: UIButton) {
+        if sender == self.buttonAddTarget {
+            self.buttonAddTarget.isEnabled = false
+            self.buttonGetBow.isEnabled = true
+            self.sceneView.removeGestureRecognizer(self.panGesture)
+            self.sceneView.addGestureRecognizer(self.tapGesture)
+            
+        } else if sender == self.buttonGetBow {
+            self.buttonGetBow.isEnabled = false
+            self.buttonAddTarget.isEnabled = true
+            self.sceneView.removeGestureRecognizer(self.tapGesture)
+            self.sceneView.addGestureRecognizer(self.panGesture)
+            self.showNotice(message: "You get the bow, try swipe up to shoot an arrow!", seconds: 3)
+        }
+    }
+    
+    func showNotice(message: String, seconds: TimeInterval) {
+        
+        self.noticeMessage.text = message
+        
+        self.timer.invalidate()
+        
+        self.noticeView.isHidden = false
+        
+        self.timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: false, block: { (timer) in
+            self.noticeView.isHidden = true
+        })
+    }
     
 }
 
@@ -159,6 +256,15 @@ extension ViewController: ARSCNViewDelegate {
         
         // 6
         node.addChildNode(planeNode)
+        
+        if !self.isPlainDetected {
+            self.isPlainDetected = true
+            
+            DispatchQueue.main.sync {
+                self.showNotice(message: "Plain Detected! Try to add a add a target around you", seconds: 4)
+                self.performChangeControls(self.buttonAddTarget)
+            }
+        }
         
     }
     
@@ -206,3 +312,23 @@ extension ViewController: ARSessionDelegate {
     }
     
 }
+
+//extension ViewController: SCNPhysicsContactDelegate {
+//    
+//    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
+//        
+//        if contact.nodeA ==   {
+//            
+//            
+//            
+//        }
+//        
+//        if let arrow = contact.nodeB {
+//            
+//            
+//        }
+//        
+//        
+//    }
+//    
+//}

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D201CD0B20FE7875001EF92D /* Overlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = D201CD0A20FE7875001EF92D /* Overlay.sks */; };
+		D201CD0D20FE7993001EF92D /* SKButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201CD0C20FE7993001EF92D /* SKButton.swift */; };
 		D253441920F9042B00F73CB1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D253441820F9042B00F73CB1 /* AppDelegate.swift */; };
 		D253441D20F9042B00F73CB1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D253441C20F9042B00F73CB1 /* ViewController.swift */; };
 		D253442020F9042B00F73CB1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D253441E20F9042B00F73CB1 /* Main.storyboard */; };
@@ -22,6 +24,8 @@
 		2FDE1BAAF0BB399C2C6A6E45 /* Pods-ArcheryAR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcheryAR.release.xcconfig"; path = "Pods/Target Support Files/Pods-ArcheryAR/Pods-ArcheryAR.release.xcconfig"; sourceTree = "<group>"; };
 		52AC49665DF5B9072727F925 /* Pods-ArcheryAR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ArcheryAR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ArcheryAR/Pods-ArcheryAR.debug.xcconfig"; sourceTree = "<group>"; };
 		97EEDAD9DDF79C3EB0BC0650 /* Pods_ArcheryAR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ArcheryAR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D201CD0A20FE7875001EF92D /* Overlay.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Overlay.sks; sourceTree = "<group>"; };
+		D201CD0C20FE7993001EF92D /* SKButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKButton.swift; sourceTree = "<group>"; };
 		D253441520F9042B00F73CB1 /* ArcheryAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArcheryAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D253441820F9042B00F73CB1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D253441C20F9042B00F73CB1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -108,6 +112,7 @@
 			children = (
 				D253442320F9042D00F73CB1 /* LaunchScreen.storyboard */,
 				D253441E20F9042B00F73CB1 /* Main.storyboard */,
+				D201CD0A20FE7875001EF92D /* Overlay.sks */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -125,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				D29A21FF20FD110800FB0378 /* UIColor.swift */,
+				D201CD0C20FE7993001EF92D /* SKButton.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -200,6 +206,7 @@
 				D253442520F9042D00F73CB1 /* LaunchScreen.storyboard in Resources */,
 				D253442220F9042D00F73CB1 /* Assets.xcassets in Resources */,
 				D29A220920FD24EE00FB0378 /* art.scnassets in Resources */,
+				D201CD0B20FE7875001EF92D /* Overlay.sks in Resources */,
 				D253442020F9042B00F73CB1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,6 +252,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D201CD0D20FE7993001EF92D /* SKButton.swift in Sources */,
 				D253441D20F9042B00F73CB1 /* ViewController.swift in Sources */,
 				D29A220420FD1BB400FB0378 /* GameStatus.swift in Sources */,
 				D29A220020FD110800FB0378 /* UIColor.swift in Sources */,
