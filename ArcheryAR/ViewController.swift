@@ -53,7 +53,7 @@ class GameViewController: UIViewController {
     
         self.setupScene()
         self.setupARDetection()
-        self.setupDebugger()
+        // self.setupDebugger()
         self.setupGestures()
     }
     
